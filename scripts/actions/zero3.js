@@ -9,16 +9,17 @@ const algodClient = new algosdk.Algodv2(
 );
 
 (async () => {
-  // Unfunded Smart Contract issuing inner transactions. Callers of the Smart Contract can cover the fees.
+  // THIS TXN WILL FAIL - Min balance of 0.1 Algo for accounts needs to be observed after payment txn is issued.
+  // The app has only been funded with 1 Algo and will have 0 Algo after inner txn is issued.
   const appId = Number(process.env.APP_ID);
-  const appId2 = Number(process.env.APP_ID_2);
+  const acc1 = algosdk.generateAccount();
   const creator = algosdk.mnemonicToSecretKey(process.env.CREATOR_MNEMONIC);
 
   // call the app to update global state
-  // InnerTxn is an app call to call another contract
-  const appArgs = [new Uint8Array(Buffer.from("InnerTxn"))];
+  // InnerTxn2 is an app call to issue inner payment txn
+  const appArgs = [new Uint8Array(Buffer.from("InnerTxn2"))];
 
-  const foreignApps = [appId2];
+  const accounts = [acc1.addr];
 
   // app call txn by unfunded account
   let suggestedParams = await algodClient.getTransactionParams().do();
@@ -30,7 +31,7 @@ const algodClient = new algosdk.Algodv2(
     suggestedParams,
     appIndex: appId,
     appArgs,
-    foreignApps,
+    accounts,
   });
 
   const signedTxn = txn1.signTxn(creator.sk);

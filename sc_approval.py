@@ -24,9 +24,24 @@ def approval_program():
         Return(Int(1)),
     )
 
+    innerTxn2 = Seq(
+        InnerTxnBuilder.Begin(),
+        InnerTxnBuilder.SetFields(
+            {
+                TxnField.type_enum: TxnType.Payment,
+                TxnField.receiver: Txn.accounts[1],
+                TxnField.amount: Int(1000000),
+                TxnField.fee: Int(0),
+            }
+        ),
+        InnerTxnBuilder.Submit(),
+        Return(Int(1)),
+    )
+
     handle_noop = Cond(
         [Txn.application_args[0] == Bytes("NoOp"), noop],
         [Txn.application_args[0] == Bytes("InnerTxn"), innerTxn],
+        [Txn.application_args[0] == Bytes("InnerTxn2"), innerTxn2],
     )
 
     program = Cond(

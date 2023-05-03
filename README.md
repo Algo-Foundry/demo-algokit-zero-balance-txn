@@ -29,7 +29,11 @@ run `yarn install`
 ```
 node scripts/actions/zero1.js
 ```
-2. Unfunded Smart Contract issuing inner transactions. Callers of the Smart Contract can cover the fees.
+2. Unfunded Smart Contract issuing inner app call transaction. Callers of the Smart Contract can cover the fees.
 ```
 node scripts/actions/zero2.js
+```
+3. Unfunded Smart Contract issuing inner payment transaction. Callers of the Smart Contract can cover the fees.
+```
+node scripts/actions/zero3.js
 ```
